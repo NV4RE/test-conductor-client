@@ -1,7 +1,8 @@
 const ConductorClient = require("conductor-client").default;
 
 const conductorClient = new ConductorClient({
-  baseURL: "https://api.fountain.drivs.io/conductor/api"
+  baseURL: "https://api.staging.drivs.io/conductor/api",
+  maxRunner: 5,
 });
 
 const workflowDefs = [
@@ -438,210 +439,287 @@ const taskDefs = [
   }
 ];
 
+// conductorClient
+//   .registerTaskDefs(taskDefs)
+//   .then(() =>
+//     conductorClient.updateWorkflowDefs(workflowDefs).then(() => {
+//       conductorClient.registerWatcher(
+//         "get_money",
+//         async (data, updater) => {
+//           try {
+//             console.log(data.taskType, data.inputData);
+//             await updater.inprogress({
+//               outputData: { queueId: "12354423" },
+//               callbackAfterSeconds: 123,
+//               logs: ["ello", "eieiei", "huhu", JSON.stringify({ hello: "test" })]
+//             });
+
+//             setTimeout(() => {
+//               conductorClient.updateTask({
+//                 workflowInstanceId: data.workflowInstanceId,
+//                 taskId: data.taskId,
+//                 status: 'COMPLETED',
+//                 outputData: {
+//                   queueId: "asdsadcccxzz"
+//                 },
+//                 logs: ["2233344"]
+//               });
+//             }, 10000);
+//           } catch (error) {
+//             console.log(error);
+//           }
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "print_slip",
+//         async (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({})
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "check_chickens",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({ outputData: { isGotChickens: "yes" } });
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "fire_chickens",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "put_chickens_on_counter",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "call_customer",
+//         (data, updater) => {
+//           const forkTasks = [
+//             {
+//               name: "dy_fork_1",
+//               taskReferenceName: "dy_fork_1",
+//               type: "SIMPLE"
+//             },
+//             {
+//               name: "dy_fork_2",
+//               taskReferenceName: "dy_fork_2",
+//               type: "SIMPLE"
+//             },
+//             {
+//               name: "dy_fork_3",
+//               taskReferenceName: "dy_fork_3",
+//               type: "SIMPLE"
+//             },
+//             {
+//               name: "dy_fork_4",
+//               taskReferenceName: "dy_fork_4",
+//               type: "SIMPLE"
+//             }
+//           ];
+//           const inputTasks = {
+//             dy_fork_1: { input1: "Hello1" },
+//             dy_fork_2: { input2: "Hello2" },
+//             dy_fork_3: { input1: "33223" },
+//             dy_fork_4: { input1: "Hello4" }
+//           };
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({
+//             outputData: {
+//               dynamicTasks: forkTasks,
+//               dynamicTasksInput: inputTasks
+//             }
+//           });
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "withdraw_disk",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "put_chickens_on_disk",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "put_chickens_on_box",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "just_wait",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "dy_fork_1",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "dy_fork_2",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "dy_fork_3",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+//       conductorClient.registerWatcher(
+//         "dy_fork_4",
+//         (data, updater) => {
+//           console.log(data, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+
+//       conductorClient.registerWatcher(
+//         "just_done",
+//         (data, updater) => {
+//           console.log(data.taskType, data.inputData);
+//           updater.complete({});
+//         },
+//         { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//         true
+//       );
+
+//       conductorClient.startWorkflow("order_chickens", {
+//         money: 500,
+//         orderType: "takehome",
+//         chickens: 20
+//       });
+//       conductorClient.startWorkflow("order_chickens", {
+//         money: 500,
+//         orderType: "takehome",
+//         chickens: 20
+//       });
+//     })
+//   )
+//   .catch(error => console.dir(error, { depth: 10 }));
+
+const sleep = mil =>
+  new Promise(resolve => {
+    setTimeout(async () => {
+      resolve();
+    }, mil);
+  });
+
 conductorClient
-  .registerTaskDefs(taskDefs)
-  .then(() =>
-    conductorClient.updateWorkflowDefs(workflowDefs).then(() => {
-      conductorClient.registerWatcher(
-        "get_money",
-        async (data, updater) => {
-          try {
-            console.log(data.taskType, data.inputData);
-            await updater.inprogress({
-              outputData: { queueId: "12354423" },
-              callbackAfterSeconds: 123,
-              logs: ["ello", "eieiei", "huhu", JSON.stringify({ hello: "test" })]
-            });
-
-            setTimeout(() => {
-              conductorClient.updateTask({
-                workflowInstanceId: data.workflowInstanceId,
-                taskId: data.taskId,
-                status: 'COMPLETED',
-                outputData: {
-                  queueId: "asdsadcccxzz"
-                },
-                logs: ["2233344"]
-              });
-            }, 10000);
-          } catch (error) {
-            console.log(error);
+  .registerTaskDefs([
+    {
+      name: "hello_world",
+      retryCount: 3,
+      inputKeys: [],
+      outputKeys: [],
+      timeoutPolicy: "TIME_OUT_WF",
+      retryLogic: "FIXED",
+      retryDelaySeconds: 0,
+      timeoutSeconds: 0
+    }
+  ])
+  .then(() => {
+    return conductorClient.updateWorkflowDefs([
+      {
+        name: "simple",
+        description: "adkdajkldasklj",
+        version: 1,
+        tasks: [
+          {
+            name: "hello_world",
+            taskReferenceName: "hello_world",
+            inputParameters: {},
+            type: "SIMPLE",
+            startDelay: 0,
+            optional: false,
+            retryCount: 0
           }
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "print_slip",
-        async (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({})
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "check_chickens",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({ outputData: { isGotChickens: "yes" } });
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "fire_chickens",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "put_chickens_on_counter",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "call_customer",
-        (data, updater) => {
-          const forkTasks = [
-            {
-              name: "dy_fork_1",
-              taskReferenceName: "dy_fork_1",
-              type: "SIMPLE"
-            },
-            {
-              name: "dy_fork_2",
-              taskReferenceName: "dy_fork_2",
-              type: "SIMPLE"
-            },
-            {
-              name: "dy_fork_3",
-              taskReferenceName: "dy_fork_3",
-              type: "SIMPLE"
-            },
-            {
-              name: "dy_fork_4",
-              taskReferenceName: "dy_fork_4",
-              type: "SIMPLE"
-            }
-          ];
-          const inputTasks = {
-            dy_fork_1: { input1: "Hello1" },
-            dy_fork_2: { input2: "Hello2" },
-            dy_fork_3: { input1: "33223" },
-            dy_fork_4: { input1: "Hello4" }
-          };
-          console.log(data.taskType, data.inputData);
-          updater.complete({
-            outputData: {
-              dynamicTasks: forkTasks,
-              dynamicTasksInput: inputTasks
-            }
-          });
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "withdraw_disk",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "put_chickens_on_disk",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "put_chickens_on_box",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "just_wait",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "dy_fork_1",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "dy_fork_2",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "dy_fork_3",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
-      conductorClient.registerWatcher(
-        "dy_fork_4",
-        (data, updater) => {
-          console.log(data, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
+        ],
+        inputParameters: [],
+        schemaVersion: 2
+      }
+    ]);
+  })
+  .then(async () => {
+    (await conductorClient.getRunningWorkflows("simple")).data.map(
+      async workflow => conductorClient.terminateWorkflow(workflow)
+    );
 
-      conductorClient.registerWatcher(
-        "just_done",
-        (data, updater) => {
-          console.log(data.taskType, data.inputData);
-          updater.complete({});
-        },
-        { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
-        true
-      );
+    for (let i = 0; i < 3; i++) {
+      conductorClient.startWorkflow("simple", {});
+    }
 
-      conductorClient.startWorkflow("order_chickens", {
-        money: 500,
-        orderType: "takehome",
-        chickens: 20
-      });
-      conductorClient.startWorkflow("order_chickens", {
-        money: 500,
-        orderType: "takehome",
-        chickens: 20
-      });
-    })
-  )
-  .catch(error => console.dir(error, { depth: 10 }));
+    return conductorClient.registerWatcher(
+      "hello_world",
+      async (data, updater) => {
+        console.log("Im running", data.taskId);
+        await sleep(5000);
+        await updater.fail({});
+        console.log("Im Complete", data.taskId);
+      },
+      { pollingIntervals: 1, autoAck: true, maxRunner: 50 },
+      true
+    );
+  })
+  .catch(error => console.log(error));
+
+// conductorClient.registerWatcher(
+//   "bye_bye",
+//   (data, updater) => {
+//     console.log(data.taskType, data.inputData);
+//     updater.complete({});
+//   },
+//   { pollingIntervals: 1000, autoAck: true, maxRunner: 1 },
+//   true
+// );
+
+// conductorClient.startWorkflow("QRUN_TEST_001", {});
