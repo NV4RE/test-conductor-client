@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "conductor-client": "0.1.2"
+    "conductor-client": "0.1.4"
   }
 }
